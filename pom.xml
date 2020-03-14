@@ -80,7 +80,7 @@
                 </descriptorRefs>
                 <archive>
                     <manifest>
-                        <mainClass>App</mainClass>
+                        <mainClass>dev.kaskaz.golftour.App</mainClass>
                     </manifest>
                 </archive>
             </configuration>
