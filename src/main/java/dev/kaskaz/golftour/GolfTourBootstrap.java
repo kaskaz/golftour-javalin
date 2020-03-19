@@ -3,12 +3,12 @@ package dev.kaskaz.golftour;
 import com.opencsv.bean.CsvToBeanBuilder;
 import dev.kaskaz.golftour.controllers.AccommodationsController;
 import dev.kaskaz.golftour.controllers.CoursesController;
-import io.javalin.Javalin;
 import dev.kaskaz.golftour.models.Accommodation;
 import dev.kaskaz.golftour.models.Course;
 import dev.kaskaz.golftour.repositories.Database;
 import dev.kaskaz.golftour.services.AccommodationsService;
 import dev.kaskaz.golftour.services.CoursesService;
+import io.javalin.Javalin;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -30,8 +30,17 @@ public class GolfTourBootstrap {
         CoursesController coursesController = new CoursesController();
         AccommodationsController accommodationsController = new AccommodationsController();
 
+        app.config.enableCorsForAllOrigins();
+
         app.before(ctx -> {
             ctx.header("Access-Control-Allow-Origin", "*");
+            ctx.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
+            ctx.header("Access-Control-Allow-Headers", "Content-Type");
+        });
+
+        app.after(ctx -> {
+            if (ctx.method().equals("OPTIONS"))
+                ctx.status(200);
         });
 
         app.routes(() -> {
@@ -44,6 +53,7 @@ public class GolfTourBootstrap {
         app.routes(() -> {
             path("accommodations", () -> {
                 get("details", accommodationsController::getDetails);
+                post("near", accommodationsController::getNear);
             });
         });
 
